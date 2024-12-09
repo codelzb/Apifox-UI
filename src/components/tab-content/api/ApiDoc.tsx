@@ -239,6 +239,15 @@ export function ApiDoc(props: { setPageTabActive: Dispatch<SetStateAction<string
     return null
   }
 
+  const hasPathParams =
+    Array.isArray(docValue.parameters?.path) && docValue.parameters.path.length > 0
+  const hasQueryParams =
+    Array.isArray(docValue.parameters?.query) && docValue.parameters.query.length > 0
+  const hasParams = hasPathParams || hasQueryParams
+
+  const pathParams = docValue.parameters?.path
+  const queryParams = docValue.parameters?.query
+
   return (
     <div className="h-full overflow-auto p-tabContent">
       <div className="flex items-center">

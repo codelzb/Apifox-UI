@@ -22,7 +22,9 @@ import { useGenerateCode as GenerateCode } from '../../../core/useGenerateCode.j
 
 import { BaseFormItems } from './components/BaseFormItems'
 import { GroupTitle } from './components/GroupTitle'
+import { PathInput, type PathInputProps } from './components/PathInput'
 import { CreateParamsTab } from './params/CreateParamsTab'
+import { ParamsTab } from './params/ParamsTab'
 
 const { URLparse } = GenerateCode()
 const DEFAULT_NAME = '未命名接口'

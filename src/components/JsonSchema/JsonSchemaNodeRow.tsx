@@ -21,11 +21,8 @@ export interface JsonSchemaNodeRowProps {
   onChange?: (value: JsonSchemaNodeRowProps['value']) => void
 
   fieldPath?: FieldPath[]
-  onAddField?: (
-    fieldPath: NonNullable<JsonSchemaNodeRowProps['fieldPath']>,
-    isRoot: boolean
-  ) => void
-  onRemoveField?: (fieldPath: NonNullable<JsonSchemaNodeRowProps['fieldPath']>) => void
+  onAddField?: (fieldPath: FieldPath[]) => void
+  onRemoveField?: (fieldPath: FieldPath[]) => void
   /** 标记是否为引用模型 */
   fromRef?: RefSchema['$ref']
   /** 是否禁止编辑。 */
@@ -270,6 +267,7 @@ export function JsonSchemaNodeRow(props: JsonSchemaNodeRowProps) {
   const pathString = fieldPath.join(SEPARATOR)
 
   const shouldExpand = expandedKeys?.includes(pathString) || false
+  const canAddField = isRoot ? type === SchemaType.Object : !isItems
   const removable = !isRoot && !isItems
   return (
     <div className={styles.row.main}>
@@ -402,15 +400,15 @@ export function JsonSchemaNodeRow(props: JsonSchemaNodeRowProps) {
       })}
       {!readOnly && (
         <div className={`${styles.row.col} ${styles.row.actions}`}>
-          {!isItems && (
+          {canAddField && (
             <Tooltip title={isRoot ? '添加子节点' : '添加相邻节点'}>
               <span
                 className={`${styles.row.action} ${styles.row.actionAdd}`}
                 onClick={() => {
                   if (isRoot) {
-                    onAddField?.([...fieldPath, KEY_PROPERTIES, '0'], isRoot)
+                    onAddField?.([...fieldPath, KEY_PROPERTIES, '0'])
                   } else {
-                    onAddField?.(fieldPath, false)
+                    onAddField?.(fieldPath)
                   }
                 }}
               >
@@ -418,7 +416,6 @@ export function JsonSchemaNodeRow(props: JsonSchemaNodeRowProps) {
               </span>
             </Tooltip>
           )}
-
           {removable && (
             <DoubleCheckRemoveBtn
               className={styles.row.action}

@@ -1,5 +1,7 @@
 import { theme } from 'antd'
 
+import { ParamsEditableCell } from '@/components/tab-content/api/components/ParamsEditableCell'
+import { isFirefox } from '@/helpers'
 import { useStyles } from '@/hooks/useStyle'
 
 import { css } from '@emotion/css'
@@ -32,21 +34,15 @@ export function EditableTable<RecordType = any>(props: EditableTableProps<Record
     })
 
     const td = css({
-      height: '0',
+      height: isFirefox() ? '100%' : '0', // HACK: 处理 td 高度，让子 div 的高度能占满 td。
       color: token.colorTextSecondary,
       textAlign: 'left',
       borderBottom: `1px solid ${token.colorBorderSecondary}`,
       overflow: 'hidden',
-
-      '&:not(:last-of-type)': {
-        '&:hover, &:focus-within': {
-          outline: `1px solid ${token.colorPrimary}`,
-          borderColor: 'transparent',
-        },
-      },
+      boxSizing: 'border-box',
 
       '.ant-input': {
-        height: '32px',
+        minHeight: '32px',
         padding: '0 5px',
       },
 
@@ -55,14 +51,21 @@ export function EditableTable<RecordType = any>(props: EditableTableProps<Record
       },
     })
 
-    return { th, td }
+    const editableWrapper = css({
+      '&:hover, &:focus-within': {
+        outline: `1px solid ${token.colorPrimary}`,
+        borderColor: 'transparent',
+      },
+    })
+
+    return { th, td, editableWrapper }
   })
 
   const internalDataSource = autoNewRow ? [...dataSource, { ...newRowRecord }] : dataSource
 
   return (
     <table
-      className="w-full"
+      className="w-full border-spacing-0"
       style={{
         border: `1px solid ${token.colorBorderSecondary}`,
         borderRadius: token.borderRadius,
@@ -94,7 +97,7 @@ export function EditableTable<RecordType = any>(props: EditableTableProps<Record
         {internalDataSource.map((record, ridx) => (
           // eslint-disable-next-line @typescript-eslint/ban-ts-comment
           // @ts-expect-error
-          <tr key={`${ridx}_${String(record[rowKey])}`}>
+          <tr key={`${ridx}_${String(record[rowKey])}`} className="h-fit">
             {columns?.map((col, cidx) => {
               // eslint-disable-next-line @typescript-eslint/ban-ts-comment
               // @ts-expect-error
@@ -106,9 +109,11 @@ export function EditableTable<RecordType = any>(props: EditableTableProps<Record
                   className={styles.td}
                   style={{ border: internalDataSource.length === ridx + 1 ? 'none' : undefined }}
                 >
-                  {typeof col.render === 'function'
-                    ? col.render(tdValue, record as RecordType, ridx)
-                    : String(tdValue)}
+                  {typeof col.render === 'function' ? (
+                    col.render(tdValue, record as RecordType, ridx)
+                  ) : (
+                    <ParamsEditableCell>{String(tdValue)}</ParamsEditableCell>
+                  )}
                 </td>
               )
             })}
