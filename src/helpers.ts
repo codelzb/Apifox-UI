@@ -1,6 +1,7 @@
 import type { ApiMenuData } from '@/components/ApiMenu'
 import { CatalogType, ContentType, MenuItemType } from '@/enums'
 
+// 获取目录类型
 export function getCatalogType(type: MenuItemType): CatalogType {
   switch (type) {
     case MenuItemType.ApiDetail:
@@ -11,20 +12,28 @@ export function getCatalogType(type: MenuItemType): CatalogType {
     case MenuItemType.ApiSchema:
     case MenuItemType.ApiSchemaFolder:
       return CatalogType.Schema
-
+    case MenuItemType.ApiCase:
+      return CatalogType.Request
     default:
       return CatalogType.Request
   }
 }
-
+// 获取创建类型
 export function getCreateType(
   type: MenuItemType | CatalogType
-): MenuItemType.ApiDetail | MenuItemType.ApiSchema | MenuItemType.Doc | MenuItemType.HttpRequest {
+):
+  | MenuItemType.ApiDetail
+  | MenuItemType.ApiSchema
+  | MenuItemType.Doc
+  | MenuItemType.HttpRequest
+  | MenuItemType.ApiCase {
   switch (type) {
     case MenuItemType.ApiDetail:
     case MenuItemType.ApiDetailFolder:
     case CatalogType.Http:
       return MenuItemType.ApiDetail
+    case MenuItemType.ApiCase:
+      return MenuItemType.ApiCase
 
     case MenuItemType.Doc:
       return MenuItemType.Doc
@@ -58,11 +67,13 @@ export function isCreateType(
   type: any
 ): type is
   | MenuItemType.ApiDetail
+  | MenuItemType.ApiCase
   | MenuItemType.ApiSchema
   | MenuItemType.Doc
   | MenuItemType.HttpRequest {
   return (
     type === MenuItemType.ApiDetail ||
+    type === MenuItemType.ApiCase ||
     type === MenuItemType.ApiSchema ||
     type === MenuItemType.HttpRequest ||
     type === MenuItemType.Doc
@@ -147,7 +158,8 @@ export function hasAccentColor(type: any): boolean {
   return (
     type === MenuItemType.ApiDetail ||
     type === MenuItemType.ApiSchema ||
-    type === MenuItemType.HttpRequest
+    type === MenuItemType.HttpRequest ||
+    type === MenuItemType.ApiCase
   )
 }
 

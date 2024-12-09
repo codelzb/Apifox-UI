@@ -6,11 +6,7 @@
     "module": "ESNext",
     "moduleResolution": "node",
     "moduleDetection": "force",
-    "lib": [
-      "DOM",
-      "DOM.Iterable",
-      "ESNext"
-    ],
+    "lib": ["DOM", "DOM.Iterable", "ESNext"],
     "skipLibCheck": true,
     "strict": true,
     "jsx": "preserve",
@@ -26,10 +22,9 @@
     "allowSyntheticDefaultImports": true,
     "forceConsistentCasingInFileNames": true,
     "strictNullChecks": true,
+    "typeRoots": ["./node_modules/@types", "./src/types"],
     "paths": {
-      "@/*": [
-        "./src/*"
-      ]
+      "@/*": ["./src/*"]
     },
     "plugins": [
       {
@@ -38,15 +33,6 @@
     ],
     "allowJs": true
   },
-  "include": [
-    "next-env.d.ts",
-    "src/**/*",
-    ".next/types/**/*.ts",
-    "./tailwind.config.ts"
-  ],
-  "exclude": [
-    "node_modules",
-    "**/.*/",
-    ".git"
-  ]
+  "include": ["next-env.d.ts", "src/**/*", ".next/types/**/*.ts", "./tailwind.config.ts"],
+  "exclude": ["node_modules", "**/.*/", ".git"]
 }

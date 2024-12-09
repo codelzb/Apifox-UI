@@ -99,7 +99,7 @@ export function DataTypeSelect(props: DataTypeSelectProps) {
               </div>
             </ConfigProvider>
           }
-          open={disabled ? false : undefined}
+          open={disabled || readOnly ? false : undefined}
           placement="right"
           rootClassName="[&_.ant-popover-inner]:!p-0"
           trigger="click"
@@ -112,41 +112,43 @@ export function DataTypeSelect(props: DataTypeSelectProps) {
           </span>
         </Popover>
 
-        <Popover
-          content={
-            <div className="w-[345px]">
-              <div className="flex pb-2">
-                <span
-                  className="ml-auto cursor-pointer"
-                  style={{ color: token.colorTextSecondary }}
-                >
-                  <XIcon size={16} />
-                </span>
-              </div>
+        {!readOnly && (
+          <Popover
+            content={
+              <div className="w-[345px]">
+                <div className="flex pb-2">
+                  <span
+                    className="ml-auto cursor-pointer"
+                    style={{ color: token.colorTextSecondary }}
+                  >
+                    <XIcon size={16} />
+                  </span>
+                </div>
 
-              <Select
-                className="[&_.ant-select-selector]:!text-current"
-                options={tyepList.map((it) => ({
-                  label: defaultSchemaTypeConfig[it].text,
-                  value: it,
-                }))}
-                style={{ color: `var(${defaultSchemaTypeConfig[type].varColor})` }}
-                value={type}
-                onChange={(v) => {
-                  onTypeSelect?.(v)
-                }}
-              />
-            </div>
-          }
-          placement="right"
-          trigger="click"
-        >
-          <Tooltip title="高级设置">
-            <span className={cssSchemaType} style={{ backgroundColor: token.colorBgLayout }}>
-              <Settings2Icon size={12} />
-            </span>
-          </Tooltip>
-        </Popover>
+                <Select
+                  className="[&_.ant-select-selector]:!text-current"
+                  options={tyepList.map((it) => ({
+                    label: defaultSchemaTypeConfig[it].text,
+                    value: it,
+                  }))}
+                  style={{ color: `var(${defaultSchemaTypeConfig[type].varColor})` }}
+                  value={type}
+                  onChange={(v) => {
+                    onTypeSelect?.(v)
+                  }}
+                />
+              </div>
+            }
+            placement="right"
+            trigger="click"
+          >
+            <Tooltip title="高级设置">
+              <span className={cssSchemaType} style={{ backgroundColor: token.colorBgLayout }}>
+                <Settings2Icon size={12} />
+              </span>
+            </Tooltip>
+          </Popover>
+        )}
       </div>
     )
   }

@@ -74,7 +74,9 @@ export const apiDirectoryData: ApiMenuData[] = [
       id: nanoid(6),
       path: '/example',
       name: '示例接口',
-      method: HttpMethod.Get,
+      requestParams: {
+        type: HttpMethod.Get,
+      },
       status: ApiStatus.Released,
       responsibleId: creator.id,
       serverId: SERVER_INHERIT,
@@ -90,7 +92,9 @@ export const apiDirectoryData: ApiMenuData[] = [
       id: nanoid(6),
       path: '/example',
       name: '名称超长的示例接口',
-      method: HttpMethod.Get,
+      requestParams: {
+        type: HttpMethod.Get,
+      },
       status: ApiStatus.Released,
       responsibleId: creator.id,
       serverId: SERVER_INHERIT,
@@ -109,9 +113,11 @@ export const apiDirectoryData: ApiMenuData[] = [
     type: MenuItemType.ApiDetail,
     data: {
       id: nanoid(6),
-      path: '/pet/{petId}',
+      path: 'http://data.ruiyun-bdp.8net.com.cn:31002/prod/disastercase/api?token=test&funname=dss/disService/getCasList&returntype=json&areaCodes=120100&stationType=county&algorithmKey=rainStrong&dataRate=oneday_8_8&beginTime=-1&endTime=-1&pageIndex=1&pageSize=14',
       name: '查询宠物详情',
-      method: HttpMethod.Get,
+      requestParams: {
+        type: HttpMethod.Get,
+      },
       status: ApiStatus.Developing,
       responsibleId: creator.id,
       tags: ['宠物', '示例', '模板'],
@@ -131,7 +137,275 @@ export const apiDirectoryData: ApiMenuData[] = [
           {
             id: nanoid(6),
             name: 'b',
-            type: ParamType.Integer,
+            type: ParamType.Int32,
+            enable: true,
+            required: false,
+            description: '',
+            example: '100',
+          },
+        ],
+        path: [
+          {
+            id: 'petId#0',
+            name: 'petId',
+            type: ParamType.String,
+            enable: true,
+            required: true,
+            description: '宠物 ID',
+            example: '1',
+          },
+        ],
+      },
+      responses: [
+        {
+          id: RESPONSE_ID_1,
+          code: 200,
+          name: '成功',
+          contentType: ContentType.JSON,
+          jsonSchema: {
+            type: SchemaType.Object,
+            properties: [
+              {
+                name: 'code',
+                type: SchemaType.Integer,
+                description: '状态码',
+              },
+              {
+                name: 'data',
+                type: SchemaType.Refer,
+                $ref: MenuId.SchemaPet,
+                description: '宠物信息',
+              },
+            ],
+          },
+        },
+        {
+          id: RESPONSE_ID_2,
+          code: 404,
+          name: '记录不存在',
+          contentType: ContentType.JSON,
+          jsonSchema: {
+            type: SchemaType.Object,
+            properties: [
+              {
+                name: 'code',
+                type: SchemaType.Integer,
+                description: '状态码',
+              },
+              {
+                name: 'message',
+                type: SchemaType.String,
+                description: '提示信息',
+              },
+            ],
+          },
+        },
+      ],
+      responseExamples: [
+        {
+          id: '1',
+          responseId: RESPONSE_ID_1,
+          name: '成功示例',
+          data: JSON.stringify({
+            code: 0,
+            data: {
+              name: 'Hello Kitty',
+              photoUrls: ['http://dummyimage.com/400x400'],
+              id: 3,
+              category: {
+                id: 71,
+                name: 'Cat',
+              },
+              tags: [
+                {
+                  id: 22,
+                  name: 'Cat',
+                },
+              ],
+              status: 'sold',
+            },
+          }),
+        },
+        {
+          id: '2',
+          responseId: RESPONSE_ID_2,
+          name: '异常示例',
+          data: JSON.stringify({
+            code: -1,
+            message: 'Not found',
+          }),
+        },
+      ],
+      createdAt: '2022-03-23T12:00:00.000Z',
+      updatedAt: '2022-03-23T12:00:00.000Z',
+    },
+  },
+  {
+    id: MenuId.查询宠物详情用例,
+    parentId: MenuId.查询宠物详情,
+    name: '查询宠物详情-用例1',
+    type: MenuItemType.ApiCase,
+    data: {
+      id: nanoid(6),
+      path: '/pet/{petId}',
+      name: '查询宠物详情',
+      requestParams: {
+        type: HttpMethod.Get,
+      },
+      status: ApiStatus.Developing,
+      responsibleId: creator.id,
+      tags: ['宠物', '示例', '模板'],
+      serverId: SERVER_INHERIT,
+      description: '## 接口说明',
+      parameters: {
+        query: [
+          {
+            id: nanoid(6),
+            name: 'a',
+            type: ParamType.String,
+            enable: true,
+            required: false,
+            description: '1.xxx\n2.xxx\n3.xxx',
+            example: 'str',
+          },
+          {
+            id: nanoid(6),
+            name: 'b',
+            type: ParamType.Int32,
+            enable: true,
+            required: false,
+            description: '',
+            example: '100',
+          },
+        ],
+        path: [
+          {
+            id: 'petId#0',
+            name: 'petId',
+            type: ParamType.String,
+            enable: true,
+            required: true,
+            description: '宠物 ID',
+            example: '1',
+          },
+        ],
+      },
+      responses: [
+        {
+          id: RESPONSE_ID_1,
+          code: 200,
+          name: '成功',
+          contentType: ContentType.JSON,
+          jsonSchema: {
+            type: SchemaType.Object,
+            properties: [
+              {
+                name: 'code',
+                type: SchemaType.Integer,
+                description: '状态码',
+              },
+              {
+                name: 'data',
+                type: SchemaType.Refer,
+                $ref: MenuId.SchemaPet,
+                description: '宠物信息',
+              },
+            ],
+          },
+        },
+        {
+          id: RESPONSE_ID_2,
+          code: 404,
+          name: '记录不存在',
+          contentType: ContentType.JSON,
+          jsonSchema: {
+            type: SchemaType.Object,
+            properties: [
+              {
+                name: 'code',
+                type: SchemaType.Integer,
+                description: '状态码',
+              },
+              {
+                name: 'message',
+                type: SchemaType.String,
+                description: '提示信息',
+              },
+            ],
+          },
+        },
+      ],
+      responseExamples: [
+        {
+          id: '1',
+          responseId: RESPONSE_ID_1,
+          name: '成功示例',
+          data: JSON.stringify({
+            code: 0,
+            data: {
+              name: 'Hello Kitty',
+              photoUrls: ['http://dummyimage.com/400x400'],
+              id: 3,
+              category: {
+                id: 71,
+                name: 'Cat',
+              },
+              tags: [
+                {
+                  id: 22,
+                  name: 'Cat',
+                },
+              ],
+              status: 'sold',
+            },
+          }),
+        },
+        {
+          id: '2',
+          responseId: RESPONSE_ID_2,
+          name: '异常示例',
+          data: JSON.stringify({
+            code: -1,
+            message: 'Not found',
+          }),
+        },
+      ],
+      createdAt: '2022-03-23T12:00:00.000Z',
+      updatedAt: '2022-03-23T12:00:00.000Z',
+    },
+  },
+  {
+    id: MenuId.查询宠物详情用例2,
+    parentId: MenuId.查询宠物详情,
+    name: '查询宠物详情-用例2',
+    type: MenuItemType.ApiCase,
+    data: {
+      id: nanoid(6),
+      path: '/pet/{petId}',
+      name: '查询宠物详情',
+      requestParams: {
+        type: HttpMethod.Get,
+      },
+      status: ApiStatus.Developing,
+      responsibleId: creator.id,
+      tags: ['宠物', '示例', '模板'],
+      serverId: SERVER_INHERIT,
+      description: '## 接口说明',
+      parameters: {
+        query: [
+          {
+            id: nanoid(6),
+            name: 'a',
+            type: ParamType.String,
+            enable: true,
+            required: false,
+            description: '1.xxx\n2.xxx\n3.xxx',
+            example: 'str',
+          },
+          {
+            id: nanoid(6),
+            name: 'b',
+            type: ParamType.Int32,
             enable: true,
             required: false,
             description: '',
@@ -243,7 +517,9 @@ export const apiDirectoryData: ApiMenuData[] = [
       id: nanoid(6),
       path: '/pet',
       name: '新建宠物信息',
-      method: HttpMethod.Post,
+      requestParams: {
+        type: HttpMethod.Post,
+      },
       status: ApiStatus.Testing,
       responsibleId: creator.id,
       tags: ['宠物'],
@@ -377,16 +653,18 @@ export const apiDirectoryData: ApiMenuData[] = [
   {
     id: MenuId.Request2,
     parentId: MenuId.Request,
-    name: 'https://abc.com',
+    name: 'ws3_0接口',
     type: MenuItemType.HttpRequest,
     data: {
       id: nanoid(6),
-      path: 'https://abc.com',
-      name: '快捷接口示例',
-      method: HttpMethod.Get,
+      path: 'http://192.168.18.105:10003//Project/WorkInstruction?projectname=&calltype=4&u=admin&p=111&iquery=Legend.GetLegendInfo|1|String;|String;|String;|String;-9999',
+      name: 'ws3_0接口',
       status: ApiStatus.Developing,
       tags: ['宠物'],
       serverId: SERVER_INHERIT,
+      requestParams: {
+        type: HttpMethod.Get,
+      },
       responses: [
         {
           id: nanoid(6),
@@ -430,7 +708,9 @@ export const recycleGroupData: RecycleData = {
             id: nanoid(6),
             path: '/api',
             name: '接口1',
-            method: HttpMethod.Get,
+            requestParams: {
+              type: HttpMethod.Get,
+            },
             status: ApiStatus.Released,
             responsibleId: creator.id,
             serverId: SERVER_INHERIT,
@@ -496,7 +776,9 @@ export const recycleGroupData: RecycleData = {
             id: nanoid(6),
             path: '/request',
             name: '示例请求',
-            method: HttpMethod.Get,
+            requestParams: {
+              type: HttpMethod.Get,
+            },
             status: ApiStatus.Released,
             responsibleId: creator.id,
             serverId: SERVER_INHERIT,
@@ -517,7 +799,8 @@ export const initialTabItems: ApiTabItem[] = (() => {
           id === MenuId.宠物店 ||
           id === MenuId.查询宠物详情 ||
           id === MenuId.SchemaPet ||
-          id === MenuId.引用模型
+          id === MenuId.引用模型 ||
+          id === MenuId.Request2
         )
       })
       .map(({ id, name, type }) => {
@@ -553,7 +836,9 @@ export const initialExpandedKeys: ApiMenuData['id'][] = [
 
 export const initialCreateApiDetailsData: ApiDetails = {
   id: nanoid(6),
-  method: HttpMethod.Get,
+  requestParams: {
+    type: HttpMethod.Get,
+  },
   status: ApiStatus.Developing,
   serverId: SERVER_INHERIT,
   responses: [defaultResponse()],

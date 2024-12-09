@@ -1,5 +1,4 @@
-import { ApiStatus, CatalogType, HttpMethod, ParamType } from '@/enums'
-
+import { ApiStatus, CatalogType, HttpMethod, MenuItemType, ParamType } from '@/enums'
 /** 根目录 ID。 */
 export const ROOT_CATALOG = '_'
 
@@ -16,30 +15,30 @@ export const HTTP_METHOD_CONFIG = {
     text: HttpMethod.Post,
     color: '--color-orange-6',
   },
-  [HttpMethod.Put]: {
-    text: HttpMethod.Put,
-    color: '--color-blue-6',
-  },
-  [HttpMethod.Delete]: {
-    text: 'DEL',
-    color: '--color-volcano-6',
-  },
-  [HttpMethod.Options]: {
-    text: 'OPT',
-    color: '--color-blue-6',
-  },
-  [HttpMethod.Head]: {
-    text: HttpMethod.Head,
-    color: '--color-blue-6',
-  },
-  [HttpMethod.Patch]: {
-    text: 'PAT',
-    color: '--color-pink-6',
-  },
-  [HttpMethod.Trace]: {
-    text: 'TRA',
-    color: '--color-geekblue-6',
-  },
+  // [HttpMethod.Put]: {
+  //   text: HttpMethod.Put,
+  //   color: '--color-blue-6',
+  // },
+  // [HttpMethod.Delete]: {
+  //   text: 'DEL',
+  //   color: '--color-volcano-6',
+  // },
+  // [HttpMethod.Options]: {
+  //   text: 'OPT',
+  //   color: '--color-blue-6',
+  // },
+  // [HttpMethod.Head]: {
+  //   text: HttpMethod.Head,
+  //   color: '--color-blue-6',
+  // },
+  // [HttpMethod.Patch]: {
+  //   text: 'PAT',
+  //   color: '--color-pink-6',
+  // },
+  // [HttpMethod.Trace]: {
+  //   text: 'TRA',
+  //   color: '--color-geekblue-6',
+  // },
 } as const satisfies Record<
   HttpMethod,
   {
@@ -122,32 +121,20 @@ export const HTTP_CODE_CONFIG = {
 } as const satisfies Record<number, { value: number; text: string; desc: string }>
 
 export const API_STATUS_CONFIG = {
-  [ApiStatus.Designing]: {
-    text: '设计中',
-    color: '--color-lime-6',
-  },
-  [ApiStatus.Pending]: {
-    text: '待确定',
-    color: '--color-yellow-6',
-  },
   [ApiStatus.Developing]: {
     text: '开发中',
     color: '--color-blue-6',
-  },
-  [ApiStatus.Obsolete]: {
-    text: '已废弃',
-    color: '--color-grey-6',
-  },
-  [ApiStatus.Integrating]: {
-    text: '联调中',
-    color: '--color-pink-6',
   },
   [ApiStatus.Testing]: {
     text: '测试中',
     color: '--color-orange-6',
   },
+  [ApiStatus.Exception]: {
+    text: '有异常',
+    color: '--color-red-6',
+  },
   [ApiStatus.Tested]: {
-    text: '已测完',
+    text: '已测试',
     color: '--color-purple-6',
   },
   [ApiStatus.Released]: {
@@ -157,10 +144,6 @@ export const API_STATUS_CONFIG = {
   [ApiStatus.Deprecated]: {
     text: '将废弃',
     color: '--color-grey-6',
-  },
-  [ApiStatus.Exception]: {
-    text: '有异常',
-    color: '--color-red-6',
   },
 } as const satisfies Record<
   ApiStatus,
@@ -174,15 +157,25 @@ export const PARAMS_CONFIG = {
   [ParamType.String]: {
     varColor: '--color-green-6',
   },
-  [ParamType.Integer]: {
+  [ParamType.Int32]: {
+    varColor: '--color-pink-6',
+  },
+  [ParamType.Float]: {
+    varColor: '--color-pink-6',
+  },
+  [ParamType.Double]: {
     varColor: '--color-pink-6',
   },
   [ParamType.Boolean]: {
     varColor: '--color-pink-6',
   },
-  [ParamType.Number]: {
+  [ParamType.DateTime]: {
     varColor: '--color-pink-6',
   },
+  [ParamType.Byte]: {
+    varColor: '--color-green-6',
+  },
+
   [ParamType.Array]: {
     varColor: '--color-green-6',
   },
@@ -212,6 +205,12 @@ export const API_MENU_CONFIG = {
     tipTitle: '添加接口',
     accentColor: '#eb2f96',
   },
+  [MenuItemType.ApiCase]: {
+    title: '接口用例',
+    newLabel: '新建接口用例',
+    tipTitle: '添加接口用例',
+    accentColor: 'rgb(95 128 233)',
+  },
   [CatalogType.Schema]: {
     title: '数据模型',
     newLabel: '新建数据模型',
@@ -231,6 +230,6 @@ export const API_MENU_CONFIG = {
     accentColor: '#13c2c2',
   },
 } as const satisfies Record<
-  CatalogType,
+  CatalogType & MenuItemType.ApiCase,
   { title: string; tipTitle: string; newLabel: string; accentColor: string }
 >

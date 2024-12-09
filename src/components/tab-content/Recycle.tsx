@@ -27,13 +27,19 @@ function RecycleTable(props: RecycleTableProps) {
           title: '文件名称',
           dataIndex: 'deletedItem',
           render: (x: RecycleDataItem['deletedItem']) => {
-            const isHttp = x.type === MenuItemType.ApiDetail || x.type === MenuItemType.HttpRequest
+            const isHttp =
+              x.type === MenuItemType.ApiDetail ||
+              x.type === MenuItemType.HttpRequest ||
+              x.type === MenuItemType.ApiCase
             const { accentColor } = API_MENU_CONFIG[catalogType]
 
             return (
               <div className="inline-flex items-center gap-x-1">
                 {isHttp ? (
-                  <HttpMethodText className="text-xs font-bold" method={x.data?.method} />
+                  <HttpMethodText
+                    className="text-xs font-bold"
+                    method={x.data?.requestParams?.type}
+                  />
                 ) : (
                   <FileIcon
                     size={15}

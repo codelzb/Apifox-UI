@@ -7,6 +7,7 @@ import { PageTabStatus } from '@/components/ApiTab/ApiTab.enum'
 import { ApiTabContentWrapper } from '@/components/ApiTab/ApiTabContentWrapper'
 import { useTabContentContext } from '@/components/ApiTab/TabContentContext'
 import { IconText } from '@/components/IconText'
+import { ApiCreateRequest } from '@/components/tab-content/api/ApiCreateRequest'
 
 import { ApiDoc } from './ApiDoc'
 import { ApiDocEditing } from './ApiDocEditing'
@@ -19,6 +20,7 @@ export function Api() {
 
   const [panelOpen, setPanelOpen] = useState(false)
 
+  const [pageTabActive, setPageTabActive] = useState('docEdit')
   const apiTabItems = useMemo<TabsProps['items']>(() => {
     return [
       {
@@ -26,7 +28,7 @@ export function Api() {
         label: '文档',
         children: (
           <ApiTabContentWrapper>
-            <ApiDoc />
+            <ApiDoc setPageTabActive={setPageTabActive} />
           </ApiTabContentWrapper>
         ),
       },
@@ -35,7 +37,16 @@ export function Api() {
         label: '修改文档',
         children: (
           <ApiTabContentWrapper>
-            <ApiDocEditing />
+            <ApiDocEditing setPageTabActive={setPageTabActive} />
+          </ApiTabContentWrapper>
+        ),
+      },
+      {
+        key: 'run',
+        label: '运行',
+        children: (
+          <ApiTabContentWrapper>
+            <ApiCreateRequest />
           </ApiTabContentWrapper>
         ),
       },
@@ -61,9 +72,9 @@ export function Api() {
         ) : (
           <div className="flex h-full overflow-hidden">
             <Tabs
+              activeKey={pageTabActive}
               animated={false}
               className="api-details-tabs flex-1"
-              defaultActiveKey="docEdit"
               items={apiTabItems}
               tabBarExtraContent={
                 <>
@@ -83,6 +94,9 @@ export function Api() {
                   </Tooltip>
                 </>
               }
+              onTabClick={(tabKey) => {
+                setPageTabActive(tabKey)
+              }}
             />
 
             <ApiSidePanel

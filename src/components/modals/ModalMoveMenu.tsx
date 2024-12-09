@@ -58,7 +58,7 @@ export const ModalMoveMenu = create(({ menuItemType, formData, ...props }: Modal
           <SelectorCatalog
             placeholder="移动到..."
             type={
-              menuItemType === MenuItemType.ApiDetail
+              menuItemType === MenuItemType.ApiDetail || menuItemType === MenuItemType.ApiCase
                 ? MenuItemType.ApiDetailFolder
                 : menuItemType === MenuItemType.ApiSchema
                   ? MenuItemType.ApiSchemaFolder

@@ -35,6 +35,11 @@ interface ApiMenuRequest extends ApiMenuBase {
   data?: ApiDetails
 }
 
+interface ApiMenuCase extends ApiMenuBase {
+  type: MenuItemType.ApiCase
+  data?: ApiDetails
+}
+
 export type CatalogId = string
 
 export type ApiMenuData =
@@ -43,6 +48,7 @@ export type ApiMenuData =
   | ApiMenuDoc
   | ApiMenuRequest
   | ApiMenuInterfaceFolder
+  | ApiMenuCase
 
 export type TreeDataNode = NonNullable<TreeProps['treeData']>[number]
 
@@ -51,5 +57,6 @@ export type CatalogDataNode = Omit<TreeDataNode, 'key'> & {
   customData: {
     catalog: ApiMenuData
   }
+  isCaseFolder?: boolean
   children?: CatalogDataNode[]
 }

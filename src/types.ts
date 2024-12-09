@@ -41,7 +41,7 @@ export interface ApiDetailsResponse {
   jsonSchema?: JsonSchema
 }
 
-interface ApiDetailsResponseExample {
+export interface ApiDetailsResponseExample {
   id: string
   responseId: ApiDetailsResponse['id']
   name: string
@@ -52,7 +52,7 @@ export interface ApiDetails {
   /** 唯一标识 */
   id: string
   /** 请求方法 */
-  method: HttpMethod
+  // method: HttpMethod
   /** 接口路径 */
   path?: string
   /** 接口名称 */
@@ -92,6 +92,13 @@ export interface ApiDetails {
   createdAt?: string
   /** 接口文档更新时间 */
   updatedAt?: string
+  requestParams?: {
+    type: HttpMethod
+    parameters?: {
+      query?: Parameter[]
+    }
+    [key: string]: any
+  }
 }
 
 export interface ApiDoc {

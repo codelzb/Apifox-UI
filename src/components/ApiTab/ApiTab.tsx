@@ -111,7 +111,6 @@ export function ApiTab(props: TabsProps) {
   const items: Tab[] = useMemo(() => {
     return tabItems.map((tabItem) => {
       const menuData = menuRawList?.find((it) => it.id === tabItem.key)
-
       return {
         key: tabItem.key,
         label: <ApiTabLabel menuData={menuData} tabItem={tabItem} />,

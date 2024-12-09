@@ -20,7 +20,6 @@ export function JsonSchemaNode(props: JsonSchemaNodeProps) {
   const { value, onChange, fieldPath = [], onAddField, ...restProps } = props
 
   const { menuRawList } = useMenuHelpersContext()
-
   const { expandedKeys } = useJsonSchemaContext()
 
   const { styles } = useStyles(({ token }) => {
@@ -64,7 +63,6 @@ export function JsonSchemaNode(props: JsonSchemaNodeProps) {
 
     return { unbind, node, ref }
   })
-
   if (!value) {
     return null
   }
@@ -77,6 +75,7 @@ export function JsonSchemaNode(props: JsonSchemaNodeProps) {
     ...restProps,
   }
 
+  // 根据不同的 Schema 类型，渲染不同的节点
   switch (value.type) {
     case SchemaType.Object:
     case SchemaType.Array:
@@ -93,13 +92,13 @@ export function JsonSchemaNode(props: JsonSchemaNodeProps) {
       if (value.type === SchemaType.Object) {
         return (
           <>
+            {/* 渲染对象节点的行 */}
             {!restProps.fromRef && <JsonSchemaNodeRow {...rowProps} />}
-
+            {/* 渲染对象的属性，如果存在属性 */}
             {Array.isArray(value.properties) && value.properties.length > 0 ? (
               <JsonSchemaNodeWrapper shouldExpand={!!restProps.fromRef || shouldExpand}>
                 {value.properties.map((propSchema, i) => {
                   const key = `${propSchema.type}_${i}_${fieldPathKey}`
-
                   return (
                     <JsonSchemaNode
                       {...renderProps}
@@ -121,6 +120,7 @@ export function JsonSchemaNode(props: JsonSchemaNodeProps) {
                 })}
               </JsonSchemaNodeWrapper>
             ) : (
+              // 如果没有属性，则显示添加属性的提示
               <div
                 className={css({
                   height: columnHeight,
@@ -133,15 +133,21 @@ export function JsonSchemaNode(props: JsonSchemaNodeProps) {
                 }}
               >
                 <span style={{ color: token.colorTextTertiary }}>
-                  没有字段，
-                  <span
-                    className={css({ color: token.colorPrimary, cursor: 'pointer' })}
-                    onClick={() => {
-                      onAddField?.([...fieldPath, KEY_PROPERTIES, '0'])
-                    }}
-                  >
-                    添加
-                  </span>
+                  {!restProps.readOnly ? (
+                    <>
+                      <span>没有字段，</span>
+                      <span
+                        className={css({ color: token.colorPrimary, cursor: 'pointer' })}
+                        onClick={() => {
+                          onAddField?.([...fieldPath, KEY_PROPERTIES, '0'], false)
+                        }}
+                      >
+                        添加
+                      </span>
+                    </>
+                  ) : (
+                    '暂无字段'
+                  )}
                 </span>
               </div>
             )}
@@ -152,9 +158,11 @@ export function JsonSchemaNode(props: JsonSchemaNodeProps) {
       if (value.type === SchemaType.Array) {
         return (
           <>
+            {/* 渲染数组节点的行 */}
             <JsonSchemaNodeRow {...rowProps} />
 
             <JsonSchemaNodeWrapper shouldExpand={shouldExpand}>
+              {/* 渲染数组的子项 */}
               <JsonSchemaNode
                 {...renderProps}
                 fieldPath={[...fieldPath, KEY_ITEMS]}
@@ -178,6 +186,7 @@ export function JsonSchemaNode(props: JsonSchemaNodeProps) {
         const { $ref, ...restValue } = value
 
         if (menuRawList) {
+          // 根据ref获取数据模型的具体数据结构
           const refJsonSchema = getRefJsonSchema(menuRawList, $ref)
 
           // 为了避免循环引用，需要判断一下，如果是同一个引用，就不再往下展示了。

@@ -39,38 +39,40 @@ export function JsonSchemaCard(props: JsonSchemaCardProps) {
           marginBottom: token.marginSM,
         }}
       >
-        <div
-          className="flex gap-2"
-          style={{
-            padding: token.paddingSM,
-            borderBottom: `1px solid ${token.colorBorderSecondary}`,
-          }}
-        >
-          <UIButton
-            primary
-            className="inline-flex items-center"
-            onClick={() => {
-              setJsonModalOpen(true)
+        {!editorProps?.readOnly && (
+          <div
+            className="flex gap-2"
+            style={{
+              padding: token.paddingSM,
+              borderBottom: `1px solid ${token.colorBorderSecondary}`,
             }}
           >
-            <ScanTextIcon size={14} />
-            <span className="ml-1">通过 JSON 生成</span>
-          </UIButton>
+            <UIButton
+              primary
+              className="inline-flex items-center"
+              onClick={() => {
+                setJsonModalOpen(true)
+              }}
+            >
+              <ScanTextIcon size={14} />
+              <span className="ml-1">通过 JSON 生成</span>
+            </UIButton>
 
-          <div className="ml-auto">
-            <Space>
-              <UIButton
-                onClick={() => {
-                  setSchemaModalOpen(true)
-                }}
-              >
-                <span className="inline-flex items-center gap-1">
-                  <BracesIcon size={12} /> JSON Schema
-                </span>
-              </UIButton>
-            </Space>
+            <div className="ml-auto">
+              <Space>
+                <UIButton
+                  onClick={() => {
+                    setSchemaModalOpen(true)
+                  }}
+                >
+                  <span className="inline-flex items-center gap-1">
+                    <BracesIcon size={12} /> JSON Schema
+                  </span>
+                </UIButton>
+              </Space>
+            </div>
           </div>
-        </div>
+        )}
 
         <div style={{ padding: token.paddingSM }}>
           <JsonSchemaEditor value={value} onChange={onChange} {...editorProps} />

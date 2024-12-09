@@ -194,7 +194,6 @@ export function MenuHelpersContextProvider(props: React.PropsWithChildren) {
       },
     }
   }, [menuRawList, recyleRawData])
-
   return (
     <MenuHelpersContext.Provider
       value={{

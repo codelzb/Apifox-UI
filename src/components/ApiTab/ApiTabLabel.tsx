@@ -20,12 +20,12 @@ export function ApiTabLabel(props: ApiTabLabelProps) {
     <span className="ui-tabs-tab-label flex items-center gap-1">
       {menuData?.type === MenuItemType.ApiDetail || menuData?.type === MenuItemType.HttpRequest ? (
         <span className="mr-1 font-semibold">
-          <HttpMethodText method={menuData.data?.method} />
+          <HttpMethodText method={menuData.data?.requestParams?.type} />
         </span>
       ) : tabItem.contentType === MenuItemType.ApiDetail &&
         tabItem.data?.tabStatus === PageTabStatus.Create ? (
         <span className="mr-1 font-semibold">
-          <HttpMethodText method={initialCreateApiDetailsData.method} />
+          <HttpMethodText method={initialCreateApiDetailsData.requestParams?.type} />
         </span>
       ) : (
         <FolderIcon

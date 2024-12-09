@@ -18,6 +18,7 @@ import { useHelpers } from '@/hooks/useHelpers'
 interface DropdownActionsProps extends DropDownProps {
   catalog: ApiMenuData
   isFolder?: boolean
+  isCaseFolder?: boolean
 }
 
 /**
@@ -34,13 +35,12 @@ export function DropdownActions(props: React.PropsWithChildren<DropdownActionsPr
 
   const { tipTitle } = API_MENU_CONFIG[getCatalogType(catalog.type)]
   const createType = getCreateType(catalog.type)
-
   const commonActionMenuItems: MenuProps['items'] = [
     {
       key: 'rename',
       label: '重命名',
       icon: <PencilIcon size={14} />,
-      onClick: (ev) => {
+      onClick: (ev: { domEvent: { stopPropagation: () => void } }) => {
         ev.domEvent.stopPropagation()
 
         void show(ModalRename, {
@@ -52,7 +52,7 @@ export function DropdownActions(props: React.PropsWithChildren<DropdownActionsPr
       key: 'copy',
       label: '复制',
       icon: <CopyIcon size={14} />,
-      onClick: (ev) => {
+      onClick: (ev: { domEvent: { stopPropagation: () => void } }) => {
         ev.domEvent.stopPropagation()
 
         addMenuItem({ ...catalog, id: nanoid(6) })
@@ -62,7 +62,7 @@ export function DropdownActions(props: React.PropsWithChildren<DropdownActionsPr
       key: 'move',
       label: '移动到',
       icon: <FolderInputIcon size={14} />,
-      onClick: (ev) => {
+      onClick: (ev: { domEvent: { stopPropagation: () => void } }) => {
         ev.domEvent.stopPropagation()
 
         void show(ModalMoveMenu, {
@@ -71,7 +71,13 @@ export function DropdownActions(props: React.PropsWithChildren<DropdownActionsPr
         })
       },
     },
-  ]
+  ].filter((it) => {
+    if (catalog.type === MenuItemType.ApiCase) {
+      return it.key !== 'move'
+    } else {
+      return true
+    }
+  })
 
   const folderActionMenu: MenuProps['items'] = [
     {
@@ -80,7 +86,7 @@ export function DropdownActions(props: React.PropsWithChildren<DropdownActionsPr
       icon: <FileIcon size={14} style={{ color: token.colorPrimary }} type={createType} />,
       onClick: (ev) => {
         ev.domEvent.stopPropagation()
-        createTabItem(createType)
+        createTabItem(createType, catalog)
       },
     },
 
@@ -172,10 +178,60 @@ export function DropdownActions(props: React.PropsWithChildren<DropdownActionsPr
     },
   ]
 
+  const caseFolderActionMenu: MenuProps['items'] = [
+    {
+      key: 'create',
+      label: '添加用例',
+      icon: (
+        <FileIcon size={14} style={{ color: token.colorPrimary }} type={MenuItemType.ApiCase} />
+      ),
+      onClick: (ev) => {
+        ev.domEvent.stopPropagation()
+        createTabItem(MenuItemType.ApiCase, catalog)
+      },
+    },
+
+    { type: 'divider' },
+
+    ...commonActionMenuItems,
+
+    { type: 'divider' },
+
+    {
+      key: 'delete',
+      label: '删除',
+      icon: <TrashIcon size={14} />,
+      onClick: (ev) => {
+        ev.domEvent.stopPropagation()
+
+        modal.confirm({
+          title: <span className="font-normal">删除目录“{catalog.name}”？</span>,
+          content: `${
+            catalog.type === MenuItemType.ApiDetailFolder
+              ? '该目录及该目录下的接口和用例都'
+              : catalog.type === MenuItemType.ApiSchemaFolder
+                ? '该目录及该目录下的数据模型都'
+                : ''
+          }将移至回收站，30 天后自动彻底删除。`,
+          okText: '删除',
+          okButtonProps: { danger: true },
+          maskClosable: true,
+          onOk: () => {
+            removeMenuItem({ id: catalog.id })
+          },
+        })
+      },
+    },
+  ]
   return (
     <Dropdown
       menu={{
-        items: isFolder ? folderActionMenu : fileActionMenu,
+        items:
+          MenuItemType.ApiDetail === catalog.type
+            ? caseFolderActionMenu
+            : isFolder
+              ? folderActionMenu
+              : fileActionMenu,
         onContextMenu: (ev) => {
           ev.preventDefault()
           ev.stopPropagation()

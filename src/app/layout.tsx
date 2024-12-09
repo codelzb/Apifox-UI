@@ -24,6 +24,11 @@ export const viewport: Viewport = {
 export default function RootLayout(props: React.PropsWithChildren) {
   return (
     <html className="h-full" lang="zh-Hans-CN">
+      <head>
+        <script defer src="/sun/sun.js"></script>
+        <script defer src="/sun.Unit/swc.js"></script>
+        <script defer src="/sun.Unit/sun.unit.js"></script>
+      </head>
       <body className="m-0 h-full">
         <AntdRegistry>
           <App className="h-full">

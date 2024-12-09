@@ -1,6 +1,7 @@
 import { ApiTabContentWrapper } from '@/components/ApiTab/ApiTabContentWrapper'
 import { useTabContentContext } from '@/components/ApiTab/TabContentContext'
 import { Api } from '@/components/tab-content/api/Api'
+import { ApiCreateRequest } from '@/components/tab-content/api/ApiCreateRequest'
 import { ApiDocEditing } from '@/components/tab-content/api/ApiDocEditing'
 import { Blank } from '@/components/tab-content/Blank'
 import { Doc } from '@/components/tab-content/Doc'
@@ -26,7 +27,13 @@ export function ApiTabContent() {
     case MenuItemType.HttpRequest:
       return (
         <ApiTabContentWrapper>
-          <ApiDocEditing />
+          <ApiCreateRequest contentType={MenuItemType.HttpRequest} />
+        </ApiTabContentWrapper>
+      )
+    case MenuItemType.ApiCase:
+      return (
+        <ApiTabContentWrapper>
+          <ApiCreateRequest contentType={MenuItemType.ApiCase} />
         </ApiTabContentWrapper>
       )
 

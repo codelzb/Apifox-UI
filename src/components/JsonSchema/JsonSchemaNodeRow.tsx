@@ -2,7 +2,7 @@ import type { ReactNode } from 'react'
 
 import { CaretRightOutlined } from '@ant-design/icons'
 import { Input, Tooltip } from 'antd'
-import { omit } from 'lodash'
+import { omit } from 'lodash-es'
 import { CirclePlusIcon } from 'lucide-react'
 
 import { cssSchemaType, DataTypeSelect } from '@/components/DataTypeSelect'
@@ -21,12 +21,16 @@ export interface JsonSchemaNodeRowProps {
   onChange?: (value: JsonSchemaNodeRowProps['value']) => void
 
   fieldPath?: FieldPath[]
-  onAddField?: (fieldPath: NonNullable<JsonSchemaNodeRowProps['fieldPath']>) => void
+  onAddField?: (
+    fieldPath: NonNullable<JsonSchemaNodeRowProps['fieldPath']>,
+    isRoot: boolean
+  ) => void
   onRemoveField?: (fieldPath: NonNullable<JsonSchemaNodeRowProps['fieldPath']>) => void
   /** 标记是否为引用模型 */
   fromRef?: RefSchema['$ref']
   /** 是否禁止编辑。 */
   disabled?: boolean
+  readOnly?: boolean
 }
 
 export function JsonSchemaNodeRow(props: JsonSchemaNodeRowProps) {
@@ -247,8 +251,7 @@ export function JsonSchemaNodeRow(props: JsonSchemaNodeRowProps) {
     }
   })
 
-  const { readOnly, expandedKeys, onExpand, extraColumns } = useJsonSchemaContext()
-
+  const { readOnly = false, expandedKeys, onExpand, extraColumns } = useJsonSchemaContext()
   if (!value) {
     return null
   }
@@ -268,7 +271,6 @@ export function JsonSchemaNodeRow(props: JsonSchemaNodeRowProps) {
 
   const shouldExpand = expandedKeys?.includes(pathString) || false
   const removable = !isRoot && !isItems
-
   return (
     <div className={styles.row.main}>
       <div className={`${styles.row.col} ${styles.row.name}`}>
@@ -296,6 +298,7 @@ export function JsonSchemaNodeRow(props: JsonSchemaNodeRowProps) {
         <span
           className={`${styles.row.nameInner} ${styles.row.col} ${!isRoot && !isItems && isCustom ? styles.row.colHover : ''}`}
         >
+          {/* 根节点或数组项特殊处理 */}
           {isRoot || isItems ? (
             <span className={styles.tag}>{isItems ? 'ITEMS' : '根节点'}</span>
           ) : (
@@ -363,6 +366,7 @@ export function JsonSchemaNodeRow(props: JsonSchemaNodeRowProps) {
         <Input
           disabled={disabled}
           placeholder="中文名"
+          readOnly={readOnly}
           value={displayName}
           onChange={(ev) => {
             triggerChange?.({ ...value, displayName: ev.target.value })
@@ -374,6 +378,7 @@ export function JsonSchemaNodeRow(props: JsonSchemaNodeRowProps) {
         <Input
           disabled={disabled}
           placeholder="说明"
+          readOnly={readOnly}
           value={description}
           onChange={(ev) => {
             triggerChange?.({ ...value, description: ev.target.value })
@@ -395,34 +400,35 @@ export function JsonSchemaNodeRow(props: JsonSchemaNodeRowProps) {
           </div>
         )
       })}
+      {!readOnly && (
+        <div className={`${styles.row.col} ${styles.row.actions}`}>
+          {!isItems && (
+            <Tooltip title={isRoot ? '添加子节点' : '添加相邻节点'}>
+              <span
+                className={`${styles.row.action} ${styles.row.actionAdd}`}
+                onClick={() => {
+                  if (isRoot) {
+                    onAddField?.([...fieldPath, KEY_PROPERTIES, '0'], isRoot)
+                  } else {
+                    onAddField?.(fieldPath, false)
+                  }
+                }}
+              >
+                <CirclePlusIcon size={13} />
+              </span>
+            </Tooltip>
+          )}
 
-      <div className={`${styles.row.col} ${styles.row.actions}`}>
-        {!isItems && (
-          <Tooltip title={isRoot ? '添加子节点' : '添加相邻节点'}>
-            <span
-              className={`${styles.row.action} ${styles.row.actionAdd}`}
-              onClick={() => {
-                if (isRoot) {
-                  onAddField?.([...fieldPath, KEY_PROPERTIES, '0'])
-                } else {
-                  onAddField?.(fieldPath)
-                }
+          {removable && (
+            <DoubleCheckRemoveBtn
+              className={styles.row.action}
+              onRemove={() => {
+                onRemoveField?.(fieldPath)
               }}
-            >
-              <CirclePlusIcon size={13} />
-            </span>
-          </Tooltip>
-        )}
-
-        {removable && (
-          <DoubleCheckRemoveBtn
-            className={styles.row.action}
-            onRemove={() => {
-              onRemoveField?.(fieldPath)
-            }}
-          />
-        )}
-      </div>
+            />
+          )}
+        </div>
+      )}
     </div>
   )
 }

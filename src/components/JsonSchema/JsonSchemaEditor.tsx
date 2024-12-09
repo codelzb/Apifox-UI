@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 
 import { produce } from 'immer'
-import { get, set } from 'lodash'
+import { get, set } from 'lodash-es'
 
 import { defaultFieldData, KEY_ITEMS, KEY_PROPERTIES, SchemaType } from './constants'
 import { JsonSchemaContextProvider } from './JsonSchema.context'
@@ -32,6 +32,7 @@ export function JsonSchemaEditor(props: JsonSchemaEditorProps) {
 
   const hasSetDefaultExpandedKeys = useRef(false)
 
+  // 计算初始化需要展开的节点key
   useEffect(() => {
     if (!hasSetDefaultExpandedKeys.current && defaultExpandAll && value) {
       const keys = getAllExpandedKeys(value)
@@ -46,7 +47,7 @@ export function JsonSchemaEditor(props: JsonSchemaEditorProps) {
     }
   }, [restRenderProps.expandedKeys])
 
-  const handleAddField = (targetPath: FieldPath[]) => {
+  const handleAddField = (targetPath: FieldPath[], isRoot: boolean) => {
     if (!value) {
       return
     }
@@ -60,7 +61,7 @@ export function JsonSchemaEditor(props: JsonSchemaEditorProps) {
         const targetSchema: JsonSchema | undefined = get(draft, targetPath)
 
         if (targetSchema) {
-          if (targetSchema.type === SchemaType.Object) {
+          if (isRoot && targetSchema.type === SchemaType.Object) {
             // 如果目标字段是一个对象，则在其 properties 中插入一个字段。
             targetSchema.properties
               ? targetSchema.properties.push(defaultFieldData)

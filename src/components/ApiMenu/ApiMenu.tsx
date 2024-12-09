@@ -46,7 +46,6 @@ export function ApiMenu() {
 
   const handleMenuSelect = useEvent<TreeOnSelect>((_, { node }) => {
     const menuId = node.key
-
     if (typeof menuId === 'string') {
       if (!node.isLeaf && isTopMenuType(node.key)) {
         switchExpandedKeys(menuId)
@@ -125,7 +124,6 @@ export function ApiMenu() {
       moveMenuItem({ dragKey, dropKey, dropPosition })
     }
   }
-
   return (
     <ConfigProvider
       theme={{

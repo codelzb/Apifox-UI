@@ -5,7 +5,7 @@ import { useStyles } from '@/hooks/useStyle'
 import { css } from '@emotion/css'
 
 interface ColumnType<RecordType> {
-  title?: string
+  title?: string | ((a: any, b: any) => any)
   dataIndex?: string
   width?: number | string
   render?: (text: any, record: RecordType, index: number) => React.ReactNode
@@ -32,6 +32,7 @@ export function EditableTable<RecordType = any>(props: EditableTableProps<Record
     })
 
     const td = css({
+      height: '0',
       color: token.colorTextSecondary,
       textAlign: 'left',
       borderBottom: `1px solid ${token.colorBorderSecondary}`,
@@ -82,7 +83,7 @@ export function EditableTable<RecordType = any>(props: EditableTableProps<Record
                 className={`p-1 text-left font-normal ${styles.th}`}
                 scope="col"
               >
-                {col.title}
+                {typeof col.title === 'function' ? col.title(col, idx) : col.title}
               </th>
             )
           })}

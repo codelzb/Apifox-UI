@@ -8,6 +8,12 @@ module.exports = {
 
   rules: {
     'import/no-unresolved': [2, { ignore: ['^\\@/'] }],
+    'prettier/prettier': [
+      'error',
+      {
+        endOfLine: 'auto',
+      },
+    ],
   },
 
   overrides: [

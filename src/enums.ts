@@ -2,26 +2,22 @@
 export const enum HttpMethod {
   Get = 'GET',
   Post = 'POST',
-  Put = 'PUT',
-  Delete = 'DELETE',
-  Head = 'HEAD',
-  Options = 'OPTIONS',
-  Patch = 'PATCH',
-  Trace = 'TRACE',
+  // Put = 'PUT',
+  // Delete = 'DELETE',
+  // Head = 'HEAD',
+  // Options = 'OPTIONS',
+  // Patch = 'PATCH',
+  // Trace = 'TRACE',
 }
 
 /** API 状态。 */
 export const enum ApiStatus {
-  Designing = 'designing',
-  Pending = 'pending',
   Developing = 'developing',
-  Obsolete = 'obsolete',
-  Integrating = 'integrating',
   Testing = 'testing',
+  Exception = 'exception',
   Tested = 'tested',
   Released = 'released',
   Deprecated = 'deprecated',
-  Exception = 'exception',
 }
 
 /** 接口菜单顶级目录的分类类型。 */
@@ -41,12 +37,21 @@ export const enum CatalogType {
 }
 
 export const enum MenuItemType {
+  /** 接口用例 */
+  ApiCase = 'apiCase',
+  /** 接口详情 */
   ApiDetail = 'apiDetail',
+  /** 接口分组 */
   ApiDetailFolder = 'apiDetailFolder',
+  /** 数据引用模型 */
   ApiSchema = 'apiSchema',
+  /** 数据引用模型分组 */
   ApiSchemaFolder = 'apiSchemaFolder',
+  /** 快捷请求分组 */
   RequestFolder = 'requestFolder',
+  /** 快捷请求 */
   HttpRequest = 'httpRequest',
+  /** 文档 */
   Doc = 'doc',
 }
 
@@ -58,6 +63,8 @@ export const enum MenuId {
   示例接口2 = '.0.1.2',
   宠物店 = '.1',
   查询宠物详情 = '.1.2',
+  查询宠物详情用例 = '.1.2.1',
+  查询宠物详情用例2 = '.1.2.2',
   新建宠物信息 = '.1.3',
   文档 = '.2',
   宠物店S = ',1',
@@ -70,10 +77,13 @@ export const enum MenuId {
 }
 
 export const enum ParamType {
-  Integer = 'integer',
-  String = 'string',
-  Boolean = 'boolean',
-  Number = 'number',
+  String = 'String',
+  Int32 = 'Number',
+  Float = 'Float',
+  Double = 'Double',
+  Boolean = 'Boolean',
+  DateTime = 'Date',
+  Byte = 'Uint8Array',
   Array = 'array',
 }
 

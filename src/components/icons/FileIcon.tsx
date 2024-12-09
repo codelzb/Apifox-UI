@@ -37,6 +37,7 @@ export function FileIcon(props: FileIconProps) {
 
     case CatalogType.Request:
     case MenuItemType.HttpRequest:
+    case MenuItemType.ApiCase:
       return <ZapIcon {...iconProps} />
 
     case CatalogType.Markdown:

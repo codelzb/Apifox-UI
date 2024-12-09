@@ -53,11 +53,12 @@ export function BaseFormItems() {
 
   const colSpan =
     containerSize === 'lg' || containerSize === 'md' ? 6 : containerSize === 'sm' ? 12 : 24
-
+  const apiColSpan =
+    containerSize === 'lg' || containerSize === 'md' ? 4 : containerSize === 'sm' ? 12 : 24
   return (
     <div ref={ref}>
       <Row gutter={16}>
-        <Col span={colSpan}>
+        <Col span={apiColSpan}>
           <Form.Item
             label="状态"
             labelCol={{ span: 24 }}
@@ -67,9 +68,15 @@ export function BaseFormItems() {
             <Select options={statusOptions} />
           </Form.Item>
         </Col>
-
-        <Col span={colSpan}>
-          <Form.Item label="责任人" labelCol={{ span: 24 }} name="responsibleId">
+        <Col span={apiColSpan}>
+          <Form.Item label="接口设计" labelCol={{ span: 24 }} name="responsibleId">
+            <Select
+              options={[{ label: `${creator.name}（@${creator.username}）`, value: creator.id }]}
+            />
+          </Form.Item>
+        </Col>
+        <Col span={apiColSpan}>
+          <Form.Item label="接口开发" labelCol={{ span: 24 }} name="responsibleId">
             <Select
               options={[{ label: `${creator.name}（@${creator.username}）`, value: creator.id }]}
             />

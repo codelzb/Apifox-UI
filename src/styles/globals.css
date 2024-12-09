@@ -1,3 +1,4 @@
+/* stylelint-disable prettier/prettier */
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -90,7 +91,7 @@
           @apply mt-[6px];
         }
 
-        & > .ant-tree-switcher {
+        &>.ant-tree-switcher {
           @apply hidden;
         }
       }
@@ -107,7 +108,8 @@
 }
 
 .ant-tabs.ant-tabs-card {
-  > .ant-tabs-nav .ant-tabs-tab {
+  >.ant-tabs-nav .ant-tabs-tab {
+
     &:hover,
     &.ant-tabs-tab-active {
       color: currentcolor;
@@ -118,7 +120,8 @@
     }
   }
 
-  > .ui-tabs-nav.ant-tabs-nav .ant-tabs-tab {
+  >.ui-tabs-nav.ant-tabs-nav .ant-tabs-tab {
+
     &:hover,
     &.ant-tabs-tab-active {
       color: currentcolor;
@@ -137,7 +140,7 @@
     .ui-tabs-nav {
       @apply pt-2;
 
-      > .ant-tabs-nav-wrap {
+      >.ant-tabs-nav-wrap {
         .ant-tabs-tab:not(.ant-tabs-tab-active) {
           border-color: transparent;
 
@@ -161,20 +164,20 @@
         @apply relative ml-2;
       }
 
-      > .ant-tabs-nav {
+      >.ant-tabs-nav {
         @apply mt-0 h-12;
 
-        > .ant-tabs-nav-wrap {
+        >.ant-tabs-nav-wrap {
           @apply mt-2;
         }
       }
     }
 
     &.main-tabs {
-      > .ant-tabs-nav {
+      >.ant-tabs-nav {
         @apply pr-3;
 
-        > .ant-tabs-nav-wrap {
+        >.ant-tabs-nav-wrap {
           @apply h-10;
         }
       }
@@ -183,7 +186,7 @@
     .api-details-tabs {
       @apply h-full;
 
-      > .ant-tabs-nav {
+      >.ant-tabs-nav {
         @apply px-tabContent;
       }
     }
@@ -198,4 +201,8 @@
       }
     }
   }
+}
+
+.language-javascript {
+  white-space: pre-line !important;
 }

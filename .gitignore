@@ -37,3 +37,9 @@ yarn-error.log*
 
 # typescript
 *.tsbuildinfo
+
+.history
+/public/resources
+/public/sun
+/public/sun.Unit
+/public/worker

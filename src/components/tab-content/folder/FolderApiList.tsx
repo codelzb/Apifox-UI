@@ -5,7 +5,7 @@ import { Table } from 'antd'
 import { useTabContentContext } from '@/components/ApiTab/TabContentContext'
 import { HttpMethodText } from '@/components/icons/HttpMethodText'
 import { useMenuHelpersContext } from '@/contexts/menu-helpers'
-import { MenuItemType } from '@/enums'
+import { type HttpMethod, MenuItemType } from '@/enums'
 import { findChildrenById, findFolders } from '@/helpers'
 import type { ApiDetails } from '@/types'
 
@@ -45,12 +45,18 @@ export function FolderApiList() {
           { title: '接口名称', dataIndex: 'name' },
           {
             title: '请求类型',
-            dataIndex: 'method',
-            render: (method) => (
-              <HttpMethodText className="text-xs font-semibold" method={method} />
+            dataIndex: 'requestParams',
+            render: (requestParams: { type?: HttpMethod }) => (
+              <HttpMethodText className="text-xs font-semibold" method={requestParams.type} />
             ),
           },
-          { title: '接口路径', dataIndex: 'path' },
+          {
+            title: '接口路径',
+            dataIndex: 'path',
+            ellipsis: {
+              showTitle: true,
+            },
+          },
           { title: '接口分组', dataIndex: 'groupPath' },
         ]}
         dataSource={dataSource}

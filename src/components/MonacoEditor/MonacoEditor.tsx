@@ -1,7 +1,7 @@
 import { forwardRef, useImperativeHandle, useRef, useState } from 'react'
 
 import { Editor, type EditorProps } from '@monaco-editor/react'
-import { merge } from 'lodash'
+import { merge } from 'lodash-es'
 
 import { deserialize, isPureObject, serialize } from '@/utils'
 
@@ -24,12 +24,15 @@ export interface MonacoEditorProps<ValueType = unknown>
   /** 是否在 onChange 事件触发前反序列化字符串。 */
   deserializeOnChange?: boolean
   useDefaultValue?: boolean
+  // 初始加载是否格式化
+  initFormat?: boolean
 }
 
 export interface MonacoEditorRef<ValueType = unknown> {
   editor: EditorInstance | undefined
   monaco: MonacoInstance | undefined
   getDeserializeValue: () => ValueType
+  formatJSON: () => void
 }
 
 function EditorX<ValueType = unknown>(
@@ -42,14 +45,26 @@ function EditorX<ValueType = unknown>(
     onChange,
     deserializeOnChange = true,
     useDefaultValue,
+    initFormat = false,
     ...editorProps
   } = props
-
   const [editorMounted, setEditorMounted] = useState(false)
 
   const editorRef = useRef<EditorInstance>()
   const monacoRef = useRef<MonacoInstance>()
 
+  const formatJSON = () => {
+    const editor = editorRef.current
+    if (editor) {
+      const currentValue = editor.getValue()
+      try {
+        const formatted = JSON.stringify(JSON.parse(currentValue), null, 2)
+        editor.setValue(formatted)
+      } catch (error) {
+        console.error('无法格式化:', error)
+      }
+    }
+  }
   useImperativeHandle(
     ref,
     () => {
@@ -57,6 +72,7 @@ function EditorX<ValueType = unknown>(
         editor: editorRef.current,
         monaco: monacoRef.current,
         getDeserializeValue: () => deserialize(editorRef.current?.getValue()),
+        formatJSON: formatJSON,
       }
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -98,6 +114,7 @@ function EditorX<ValueType = unknown>(
           editorProps.onMount?.(editor, monaco)
           editorRef.current = editor
           monacoRef.current = monaco
+          initFormat && formatJSON()
           setEditorMounted(true)
         }}
       />

@@ -26,3 +26,18 @@ export function moveArrayItem<T>(arr: T[], fromIndex: number, toIndex: number) {
   // 然后在指定位置插入该元素。
   arr.splice(toIndex, 0, element)
 }
+export function isJSON(str: string) {
+  if (typeof str === 'string') {
+    try {
+      const obj = JSON.parse(str)
+
+      if (typeof obj === 'object' && obj) {
+        return true
+      } else {
+        return false
+      }
+    } catch (e) {
+      return false
+    }
+  }
+}

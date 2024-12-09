@@ -9,15 +9,17 @@ import type { CatalogDataNode } from './ApiMenu.type'
 /** 计算叶子节点的数量，用于显示在菜单名称后面。 */
 const countLeaf = (node: CatalogDataNode) => {
   let count = 0
-
-  node.children?.forEach((child) => {
-    if (child.isLeaf) {
-      count += 1
-    } else {
-      count += countLeaf(child as CatalogDataNode)
-    }
-  })
-
+  if (node.isCaseFolder) {
+    count += 1
+  } else {
+    node.children?.forEach((child) => {
+      if (child.isLeaf) {
+        count += 1
+      } else {
+        count += countLeaf(child as CatalogDataNode)
+      }
+    })
+  }
   return count
 }
 

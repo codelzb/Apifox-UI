@@ -2,7 +2,7 @@ import { useMemo } from 'react'
 
 import type { TreeProps } from 'antd'
 import arrayToTree from 'array-to-tree'
-import { FolderClosedIcon, FolderOpenIcon } from 'lucide-react'
+import { FolderClosedIcon, FolderOpenIcon, ZapIcon } from 'lucide-react'
 
 import { FileIcon } from '@/components/icons/FileIcon'
 import { FolderIcon } from '@/components/icons/FolderIcon'
@@ -35,6 +35,7 @@ const groupMenuByType = (menuData: CatalogDataNode[]) => {
         case MenuItemType.ApiDetail:
         case MenuItemType.ApiDetailFolder:
         case MenuItemType.Doc:
+        case MenuItemType.ApiCase:
           res[CatalogType.Http].push(catalogDataNode)
           break
 
@@ -88,13 +89,16 @@ export function useMenuData(): MenuState {
           return name.includes(menuSearchWord)
         })
       : menuRawList
-
+    const apiCaseParentIdList = menuList
+      ?.filter((item) => item.type === MenuItemType.ApiCase)
+      .map((item) => item.parentId)
     return menuList?.map<CatalogDataNode>((item) => {
-      const isLeaf = !isMenuFolder(item.type)
+      const isLeaf = !isMenuFolder(item.type) && !apiCaseParentIdList?.includes(item.id)
 
       return {
         key: item.id,
         title: item.name,
+        isCaseFolder: !!apiCaseParentIdList?.includes(item.id),
         isLeaf,
         customData: { catalog: item },
       }
@@ -105,66 +109,82 @@ export function useMenuData(): MenuState {
    * 包含交互组件（即 React 组件）的菜单数据，需要传入到菜单树组件中使用。
    * 注意：render prop 字段需要使用函数形式，否则会导致 deepClone 失败。
    */
-  const menusWithRender: CatalogDataNode[] | undefined = useMemo(
-    () =>
-      menus?.map<CatalogDataNode>((item) => {
-        const catalog = item.customData.catalog
-        const isHttp =
-          catalog.type === MenuItemType.ApiDetail || catalog.type === MenuItemType.HttpRequest
-
-        return {
-          ...item,
-          icon: ({ expanded }) => {
-            if (item.isLeaf) {
-              if (isHttp) {
-                return (
-                  <span className="mr-1 inline-block w-[29px] whitespace-nowrap text-left text-xs/none font-semibold">
-                    <HttpMethodText method={catalog.data?.method} />
-                  </span>
-                )
-              }
-
-              const { accentColor } = API_MENU_CONFIG[getCatalogType(catalog.type)]
-
+  const menusWithRender: CatalogDataNode[] | undefined = useMemo(() => {
+    const data = menus?.map<CatalogDataNode>((item) => {
+      const catalog = item.customData.catalog
+      const isHttp =
+        catalog.type === MenuItemType.ApiDetail || catalog.type === MenuItemType.HttpRequest
+      return {
+        ...item,
+        icon: ({ expanded }) => {
+          if (item.isLeaf) {
+            if (isHttp) {
               return (
-                <span
-                  className={`inline-flex size-full items-center justify-center ${item.customData.catalog.type === MenuItemType.ApiSchema ? 'text-blue-500' : ''}`}
-                >
-                  <FileIcon
-                    size={15}
-                    style={{ color: hasAccentColor(catalog.type) ? accentColor : undefined }}
-                    type={catalog.type}
-                  />
+                <span className="mr-1 inline-block w-[29px] whitespace-nowrap text-left text-xs/none font-semibold">
+                  <HttpMethodText method={catalog.data?.requestParams?.type} />
+                </span>
+              )
+            } else if (catalog.type === MenuItemType.ApiCase) {
+              return (
+                <span className="inline-block whitespace-nowrap text-left text-xs/none font-semibold">
+                  <ZapIcon color="#9373ee" size={14}></ZapIcon>
                 </span>
               )
             }
 
+            const { accentColor } = API_MENU_CONFIG[getCatalogType(catalog.type)]
+
             return (
-              <span className="flex h-full items-center">
-                {expanded ? <FolderOpenIcon size={14} /> : <FolderClosedIcon size={14} />}
+              <span
+                className={`inline-flex size-full items-center justify-center ${item.customData.catalog.type === MenuItemType.ApiSchema ? 'text-blue-500' : ''}`}
+              >
+                <FileIcon
+                  size={15}
+                  style={{ color: hasAccentColor(catalog.type) ? accentColor : undefined }}
+                  type={catalog.type}
+                />
               </span>
             )
-          },
-          title: (node) => (
-            <ApiMenuTitle
-              actions={
-                item.isLeaf ? <FileAction catalog={catalog} /> : <FolderAction catalog={catalog} />
-              }
-              name={
-                catalog.type === MenuItemType.ApiDetail
-                  ? apiDetailDisplay === 'name'
-                    ? catalog.name
-                    : catalog.data?.path || catalog.name
-                  : catalog.name
-              }
-              node={node as CatalogDataNode}
-            />
-          ),
-          className: item.isLeaf ? 'leaf-node' : undefined,
-        }
-      }),
-    [menus, apiDetailDisplay]
-  )
+          } else if (item.isCaseFolder) {
+            if (catalog.type === MenuItemType.ApiDetail) {
+              return (
+                <span className="mr-1 inline-block w-[29px] whitespace-nowrap text-left text-xs/none font-semibold">
+                  <HttpMethodText method={catalog.data?.requestParams?.type} />
+                </span>
+              )
+            }
+          }
+
+          return (
+            <span className="flex h-full items-center">
+              {expanded ? <FolderOpenIcon size={14} /> : <FolderClosedIcon size={14} />}
+            </span>
+          )
+        },
+        title: (node) => (
+          <ApiMenuTitle
+            actions={
+              item.isLeaf ? (
+                <FileAction catalog={catalog} />
+              ) : (
+                <FolderAction catalog={catalog} isCaseFolder={!!item.isCaseFolder} />
+              )
+            }
+            name={
+              catalog.type === MenuItemType.ApiDetail
+                ? apiDetailDisplay === 'name'
+                  ? catalog.name
+                  : catalog.data?.path || catalog.name
+                : catalog.name
+            }
+            node={node as CatalogDataNode}
+          />
+        ),
+        className: item.isLeaf ? 'leaf-node' : undefined,
+      }
+    })
+    return data
+  }, [menus, apiDetailDisplay])
 
   const groupedMenus: GroupedMenu | undefined = useMemo(() => {
     if (menusWithRender) {
